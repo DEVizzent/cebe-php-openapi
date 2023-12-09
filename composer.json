@@ -96,10 +96,9 @@
 			"package": {
 				"name": "apis-guru/openapi-directory",
 				"version": "1.0.0",
-				"source": {
-					"url": "https://github.com/APIs-guru/openapi-directory",
-					"type": "git",
-					"reference": "openapi3.0.0"
+				"dist": {
+					"url": "https://github.com/APIs-guru/openapi-directory/archive/refs/heads/openapi3.0.0.zip",
+					"type": "zip"
 				}
 			}
 		}
