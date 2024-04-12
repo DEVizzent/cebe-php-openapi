@@ -41,6 +41,9 @@
 	"conflict": {
 		"symfony/yaml": "3.4.0 - 3.4.4 || 4.0.0 - 4.4.17 || 5.0.0 - 5.1.9 || 5.2.0"
 	},
+	"replace": {
+	    "cebe/php-openapi":"1.7.0"
+	},
 	"autoload": {
 		"psr-4": {
 			"cebe\\openapi\\": "src/"
