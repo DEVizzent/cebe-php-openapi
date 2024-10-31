@@ -102,6 +102,20 @@ JSON
         $this->assertTrue($schema->exclusiveMaximum);
         $this->assertNull($schema->minimum);
         $this->assertNull($schema->exclusiveMinimum);
+
+        /** @var $schema Schema */
+        $schema = Reader::readFromJson('{"type": "integer", "exclusiveMaximum": 10}', Schema::class);
+        $this->assertNull($schema->maximum);
+        $this->assertSame(10, $schema->exclusiveMaximum);
+        $this->assertNull($schema->minimum);
+        $this->assertNull($schema->exclusiveMinimum);
+
+        /** @var $schema Schema */
+        $schema = Reader::readFromJson('{"type": "integer", "exclusiveMinimum": 10}', Schema::class);
+        $this->assertNull($schema->maximum);
+        $this->assertNull($schema->exclusiveMaximum);
+        $this->assertNull($schema->minimum);
+        $this->assertSame(10, $schema->exclusiveMinimum);
     }
 
     public function testReadObject()

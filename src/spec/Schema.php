@@ -26,9 +26,9 @@ use cebe\openapi\SpecBaseObject;
  * @property string $title
  * @property int|float $multipleOf
  * @property int|float $maximum
- * @property bool $exclusiveMaximum
+ * @property bool|int|float $exclusiveMaximum
  * @property int|float $minimum
- * @property bool $exclusiveMinimum
+ * @property bool|int|float $exclusiveMinimum
  * @property int $maxLength
  * @property int $minLength
  * @property string $pattern (This string SHOULD be a valid regular expression, according to the [ECMA 262 regular expression dialect](https://www.ecma-international.org/ecma-262/5.1/#sec-7.8.5))
@@ -75,9 +75,9 @@ class Schema extends SpecBaseObject
             'title' => Type::STRING,
             'multipleOf' => Type::NUMBER,
             'maximum' => Type::NUMBER,
-            'exclusiveMaximum' => Type::BOOLEAN,
+            // 'exclusiveMaximum' => 'boolean' for 3.0 or 'number' for 3.1, handled in constructor,
             'minimum' => Type::NUMBER,
-            'exclusiveMinimum' => Type::BOOLEAN,
+            // 'exclusiveMinimum' => 'boolean' for 3.0 or 'number' for 3.1, handled in constructor,
             'maxLength' => Type::INTEGER,
             'minLength' => Type::INTEGER,
             'pattern' => Type::STRING,
@@ -151,6 +151,15 @@ class Schema extends SpecBaseObject
                 throw new TypeErrorException(sprintf('Schema::$additionalProperties MUST be either boolean or a Schema/Reference object, "%s" given', $givenType));
             }
         }
+
+        if (isset($data['exclusiveMaximum']) && !in_array(gettype($data['exclusiveMaximum']), ['boolean', 'double', 'integer'])) {
+            throw new TypeErrorException(sprintf('Schema::$exclusiveMinimum MUST be either boolean or a number, "%s" given', gettype($data['exclusiveMaximum'])));
+        }
+
+        if (isset($data['exclusiveMinimum']) && !in_array(gettype($data['exclusiveMinimum']), ['boolean', 'double', 'integer'])) {
+            throw new TypeErrorException(sprintf('Schema::$exclusiveMinimum MUST be either boolean or a number, "%s" given', gettype($data['exclusiveMinimum'])));
+        }
+
         parent::__construct($data);
     }
 
