@@ -75,9 +75,9 @@ class Schema extends SpecBaseObject
             'title' => Type::STRING,
             'multipleOf' => Type::NUMBER,
             'maximum' => Type::NUMBER,
-            'exclusiveMaximum' => Type::BOOLEAN,
+            // 'exclusiveMaximum' => 'boolean' for 3.0 or 'number' for 3.1, handled in constructor,
             'minimum' => Type::NUMBER,
-            'exclusiveMinimum' => Type::BOOLEAN,
+            // 'exclusiveMinimum' => 'boolean' for 3.0 or 'number' for 3.1, handled in constructor,
             'maxLength' => Type::INTEGER,
             'minLength' => Type::INTEGER,
             'pattern' => Type::STRING,
@@ -151,6 +151,15 @@ class Schema extends SpecBaseObject
                 throw new TypeErrorException(sprintf('Schema::$additionalProperties MUST be either boolean or a Schema/Reference object, "%s" given', $givenType));
             }
         }
+
+        if (isset($data['exclusiveMaximum']) && !in_array(gettype($data['exclusiveMaximum']), ['bool', 'double', 'integer'])) {
+            throw new TypeErrorException(sprintf('Schema::$exclusiveMinimum MUST be either boolean or a number, "%s" given', gettype($data['exclusiveMaximum'])));
+        }
+
+        if (isset($data['exclusiveMinimum']) && !in_array(gettype($data['exclusiveMinimum']), ['bool', 'double', 'integer'])) {
+            throw new TypeErrorException(sprintf('Schema::$exclusiveMinimum MUST be either boolean or a number, "%s" given', gettype($data['exclusiveMinimum'])));
+        }
+
         parent::__construct($data);
     }
 
