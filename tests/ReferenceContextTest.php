@@ -6,7 +6,7 @@ use cebe\openapi\spec\OpenApi;
 
 class ReferenceContextTest extends \PHPUnit\Framework\TestCase
 {
-    public function resolveUriProvider()
+    public static function resolveUriProvider()
     {
         $data = [
             [
@@ -124,7 +124,7 @@ class ReferenceContextTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $context->resolveRelativeUri($referencedUri));
     }
 
-    public function normalizeUriProvider()
+    public static function normalizeUriProvider()
     {
         $data = [
             [

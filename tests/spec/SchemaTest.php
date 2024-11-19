@@ -225,7 +225,7 @@ YAML
     }
 
 
-    public function badSchemaProvider()
+    public static function badSchemaProvider()
     {
         yield [['properties' => ['a' => 'foo']], 'Unable to instantiate cebe\openapi\spec\Schema Object with data \'foo\''];
         yield [['properties' => ['a' => 42]], 'Unable to instantiate cebe\openapi\spec\Schema Object with data \'42\''];

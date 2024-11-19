@@ -174,7 +174,7 @@ YAML
         $this->assertSame('The pets list is gone 🙀', $responses->getResponse(404)->description);
     }
 
-    public function badResponseProvider()
+    public static function badResponseProvider()
     {
         yield [['200' => 'foo'], 'Response MUST be either an array, a Response or a Reference object, "string" given'];
         yield [['200' => 42], 'Response MUST be either an array, a Response or a Reference object, "integer" given'];

@@ -103,7 +103,7 @@ YAML
         $this->assertInstanceOf(\cebe\openapi\spec\Encoding::class, $mediaType->encoding['profileImage']);
     }
 
-    public function badEncodingProvider()
+    public static function badEncodingProvider()
     {
         yield [['encoding' => ['id' => 'foo']], 'Encoding MUST be either array or Encoding object, "string" given'];
         yield [['encoding' => ['id' => 42]], 'Encoding MUST be either array or Encoding object, "integer" given'];

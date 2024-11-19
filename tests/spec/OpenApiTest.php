@@ -89,7 +89,7 @@ class OpenApiTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function specProvider()
+    public static function specProvider()
     {
         // examples from https://github.com/OAI/OpenAPI-Specification/tree/master/examples/v3.0
         $oaiExamples = [
