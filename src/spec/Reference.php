@@ -8,7 +8,6 @@
 namespace cebe\openapi\spec;
 
 use cebe\openapi\DocumentContextInterface;
-use cebe\openapi\exceptions\IOException;
 use cebe\openapi\exceptions\TypeErrorException;
 use cebe\openapi\exceptions\UnresolvableReferenceException;
 use cebe\openapi\json\InvalidJsonPointerSyntaxException;
@@ -17,7 +16,6 @@ use cebe\openapi\json\JsonReference;
 use cebe\openapi\json\NonexistentJsonPointerReferenceException;
 use cebe\openapi\ReferenceContext;
 use cebe\openapi\SpecObjectInterface;
-use Symfony\Component\Yaml\Yaml;
 
 /**
  * Reference Object
@@ -37,6 +35,14 @@ class Reference implements SpecObjectInterface, DocumentContextInterface
      * @var string
      */
     private $_ref;
+    /**
+     * @var string|null
+     */
+    private $_summary;
+    /**
+     * @var string|null
+     */
+    private $_description;
     /**
      * @var JsonReference|null
      */
@@ -81,15 +87,33 @@ class Reference implements SpecObjectInterface, DocumentContextInterface
                 'Unable to instantiate Reference Object, value of $ref must be a string.'
             );
         }
+        if (isset($data['summary']) && !is_string($data['summary'])) {
+            throw new TypeErrorException(
+                'Unable to instantiate Reference Object, value of summary must be a string.'
+            );
+        }
+        if (isset($data['description']) && !is_string($data['description'])) {
+            throw new TypeErrorException(
+                'Unable to instantiate Reference Object, value of description must be a string.'
+            );
+        }
+
         $this->_to = $to;
         $this->_ref = $data['$ref'];
+        $this->_summary = $data['summary'] ?? null;
+        $this->_description = $data['description'] ?? null;
         try {
-            $this->_jsonReference = JsonReference::createFromReference($this->_ref);
+            $this->_jsonReference = JsonReference::createFromReference(
+                $this->_ref,
+                $this->_summary,
+                $this->_description
+            );
         } catch (InvalidJsonPointerSyntaxException $e) {
             $this->_errors[] = 'Reference: value of $ref is not a valid JSON pointer: ' . $e->getMessage();
         }
-        if (count($data) !== 1) {
-            $this->_errors[] = 'Reference: additional properties are given. Only $ref should be set in a Reference Object.';
+
+        if (!empty(array_diff(array_keys($data), ['$ref', 'summary', 'description']))) {
+            $this->_errors[] = 'Reference: additional properties are given. Only $ref, summary and description should be set in a Reference Object.';
         }
     }
 
@@ -99,7 +123,11 @@ class Reference implements SpecObjectInterface, DocumentContextInterface
      */
     public function getSerializableData()
     {
-        return (object) ['$ref' => $this->_ref];
+        return (object) array_filter([
+            '$ref' => $this->_ref,
+            'summary' => $this->_summary,
+            'description' => $this->_description,
+        ]);
     }
 
     /**
@@ -133,6 +161,22 @@ class Reference implements SpecObjectInterface, DocumentContextInterface
     public function getReference()
     {
         return $this->_ref;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getSummary()
+    {
+        return $this->_summary;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDescription()
+    {
+        return $this->_description;
     }
 
     /**

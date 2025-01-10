@@ -657,4 +657,49 @@ YAML;
         }
     }
 
+    public function testReferenceExtraFields()
+    {
+        /** @var $openapi OpenApi */
+        $openapi = Reader::readFromYaml(<<<'YAML'
+openapi: 3.1.0
+info:
+  title: test api
+  version: 1.0.0
+components:
+  schemas:
+    Pet:
+      type: object
+      properties:
+        id:
+          type: integer
+paths:
+  '/pet':
+    get:
+      responses:
+        200:
+          description: return a pet
+          content:
+            'application/json':
+              schema:
+                $ref: "#/components/schemas/Pet"
+                summary: 'Pet Schema'
+                description: 'This is a pet schema'
+YAML
+            , OpenApi::class);
+
+        $result = $openapi->validate();
+        $this->assertEquals([], $openapi->getErrors());
+        $this->assertTrue($result);
+
+        /** @var $petResponse Response */
+        $petResponse = $openapi->paths->getPath('/pet')->get->responses['200'];
+        $this->assertInstanceOf(Reference::class, $ref = $petResponse->content['application/json']->schema);
+        $this->assertEquals('Pet Schema', $ref->getSummary());
+        $this->assertEquals('This is a pet schema', $ref->getDescription());
+
+        $openapi->resolveReferences(new \cebe\openapi\ReferenceContext($openapi, 'file:///tmp/openapi.yaml'));
+
+        $this->assertInstanceOf(Schema::class, $refSchema = $petResponse->content['application/json']->schema);
+        $this->assertSame($openapi->components->schemas['Pet'], $refSchema);
+    }
 }
