@@ -80,8 +80,8 @@ final class JsonReference implements JsonSerializable
      */
     public static function createFromReference(
         string $referenceURI,
-        string $summary = null,
-        string $description = null,
+        ?string $summary = null,
+        ?string $description = null
     ): JsonReference
     {
         $jsonReference = new JsonReference();
