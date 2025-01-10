@@ -1,3 +1,11 @@
-yarn.lock export-ignore
-docker-compose.yml export-ignore
-Makefile export-ignore
+/.github             export-ignore
+/schemas             export-ignore
+/tests               export-ignore
+.gitattributes       export-ignore
+.gitignore           export-ignore
+.php_cs.dist         export-ignore
+docker-compose.yml   export-ignore
+Makefile             export-ignore
+phpunit.xml.dist     export-ignore
+phpunit11.xml.dist   export-ignore
+yarn.lock           export-ignore
