@@ -163,11 +163,17 @@ class Reference implements SpecObjectInterface, DocumentContextInterface
         return $this->_ref;
     }
 
+    /**
+     * @return string|null
+     */
     public function getSummary()
     {
         return $this->_summary;
     }
 
+    /**
+     * @return string|null
+     */
     public function getDescription()
     {
         return $this->_description;
