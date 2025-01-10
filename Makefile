@@ -44,7 +44,7 @@ install: composer.lock yarn.lock
 test: unit test-recursion.json test-recursion2.yaml test-recursion3_index.yaml test-empty-maps.json
 
 unit:
-	$(DOCKER_PHP) php $(PHPARGS) $(XPHPARGS) vendor/bin/phpunit --verbose --colors=always $(TESTCASE)
+	$(DOCKER_PHP) php $(PHPARGS) $(XPHPARGS) vendor/bin/phpunit --colors=always $(TESTCASE)
 
 test-debug: unit-debug test-recursion.json test-recursion2.yaml test-recursion3_index.yaml test-empty-maps.json
 

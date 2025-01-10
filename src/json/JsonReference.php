@@ -28,6 +28,14 @@ final class JsonReference implements JsonSerializable
      * @var JsonPointer
      */
     private $_pointer;
+    /**
+     * @var string|null
+     */
+    private $_summary;
+    /**
+     * @var string|null
+     */
+    private $_description;
 
     /**
      * Create a JSON Reference instance from a JSON document.
@@ -42,7 +50,11 @@ final class JsonReference implements JsonSerializable
         if (!isset($refObject['$ref'])) {
             throw new MalformedJsonReferenceObjectException('JSON Reference Object must contain the "$ref" member.');
         }
-        return static::createFromReference($refObject['$ref']);
+        return static::createFromReference(
+            $refObject['$ref'],
+            $refObject['summary'] ?? null,
+            $refObject['description'] ?? null,
+        );
     }
 
     /**
@@ -66,10 +78,16 @@ final class JsonReference implements JsonSerializable
      * @return JsonReference
      * @throws InvalidJsonPointerSyntaxException if an invalid JSON pointer string is passed as part of the fragment section.
      */
-    public static function createFromReference(string $referenceURI): JsonReference
+    public static function createFromReference(
+        string $referenceURI,
+        ?string $summary = null,
+        ?string $description = null,
+    ): JsonReference
     {
         $jsonReference = new JsonReference();
-        if (strpos($referenceURI, '#') !== false) {
+        $jsonReference->_summary = $summary;
+        $jsonReference->_description = $description;
+        if (str_contains($referenceURI, '#')) {
             list($uri, $fragment) = explode('#', $referenceURI, 2);
             $jsonReference->_uri = $uri;
             $jsonReference->_pointer = new JsonPointer(rawurldecode($fragment));
@@ -129,6 +147,10 @@ final class JsonReference implements JsonSerializable
     #[\ReturnTypeWillChange]
     public function jsonSerialize() //: mixed
     {
-        return (object)['$ref' => $this->getReference()];
+        return (object) array_filter([
+            '$ref' => $this->getReference(),
+            'summary' => $this->_summary,
+            'description' => $this->_description,
+        ]);
     }
 }
