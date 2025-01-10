@@ -82,8 +82,7 @@ final class JsonReference implements JsonSerializable
         string $referenceURI,
         ?string $summary = null,
         ?string $description = null
-    ): JsonReference
-    {
+    ): JsonReference {
         $jsonReference = new JsonReference();
         $jsonReference->_summary = $summary;
         $jsonReference->_description = $description;
