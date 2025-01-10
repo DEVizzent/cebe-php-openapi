@@ -52,8 +52,8 @@ final class JsonReference implements JsonSerializable
         }
         return static::createFromReference(
             $refObject['$ref'],
-            $refObject['summary'] ?? null,
-            $refObject['description'] ?? null,
+            isset($refObject['summary']) ? $refObject['summary'] : null,
+            isset($refObject['description']) ? $refObject['description'] : null,
         );
     }
 
