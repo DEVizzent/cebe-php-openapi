@@ -87,7 +87,7 @@ final class JsonReference implements JsonSerializable
         $jsonReference = new JsonReference();
         $jsonReference->_summary = $summary;
         $jsonReference->_description = $description;
-        if (str_contains($referenceURI, '#')) {
+        if (strpos($referenceURI, '#') !== false) {
             list($uri, $fragment) = explode('#', $referenceURI, 2);
             $jsonReference->_uri = $uri;
             $jsonReference->_pointer = new JsonPointer(rawurldecode($fragment));
