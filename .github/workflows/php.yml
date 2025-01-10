@@ -93,7 +93,7 @@ jobs:
 
       - name: Require newer phpunit/phpunit version
         run: "composer require phpunit/phpunit '^11.4' --dev --no-interaction --ansi --no-install"
-        if: matrix.php == '8.3'
+        if: matrix.php >= '8.3'
 
       - name: "Install dependencies with Composer"
         uses: "ramsey/composer-install@v2"
@@ -109,7 +109,7 @@ jobs:
 
       - name: PHPUnit tests
         run: make test-debug
-        if: matrix.php == '8.3'
+        if: matrix.php >= '8.3'
 
       - name: Code coverage
         run: make coverage
