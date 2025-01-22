@@ -45,9 +45,19 @@ use cebe\openapi\SpecBaseObject;
  * @property Schema[]|Reference[] $oneOf
  * @property Schema[]|Reference[] $anyOf
  * @property Schema|Reference|null $not
+ * @property Schema|Reference|null $if
+ * @property Schema|Reference|null $then
+ * @property Schema|Reference|null $else
+ * @property Schema[]|Reference[]|null $dependentSchemas
+ * @property Schema[]|Reference[]|null $prefixItems
  * @property Schema|Reference|null $items
+ * @property Schema|Reference|null $contains
  * @property Schema[]|Reference[] $properties
+ * @property Schema[]|Reference[] $patternProperties
  * @property Schema|Reference|bool $additionalProperties
+ * @property Schema|Reference|null $propertyNames
+ * @property Schema|Reference|null $unevaluatedItems
+ * @property Schema|Reference|null $unevaluatedProperties
  * @property string $description
  * @property string $format
  * @property mixed $default
@@ -94,9 +104,20 @@ class Schema extends SpecBaseObject
             'oneOf' => [Schema::class],
             'anyOf' => [Schema::class],
             'not' => Schema::class,
+            'if' => Schema::class,
+            'then' => Schema::class,
+            'else' => Schema::class,
+            'dependentSchemas' => [Type::STRING, Schema::class],
+            'prefixItems' => [Schema::class],
             'items' => Schema::class,
+            'contains' => Schema::class,
             'properties' => [Type::STRING, Schema::class],
+            'patternProperties' => [Type::STRING, Schema::class],
             //'additionalProperties' => 'boolean' | ['string', Schema::class], handled in constructor
+            'propertyNames' => Schema::class,
+            'unevaluatedItems' => Schema::class,
+            //@todo add support for unevaluatedProperties
+            //'unevaluatedProperties' => Schema::class,
             'description' => Type::STRING,
             'format' => Type::STRING,
             'default' => Type::ANY,
