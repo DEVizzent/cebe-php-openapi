@@ -79,7 +79,7 @@ coverage: .php-openapi-covA .php-openapi-covB
 .php-openapi-covA:
 	grep -rhoE 'CoversClass\([^)]+::class' tests | sed -E 's/.*[\]([A-Za-z]+)::class/\1/' | sort > $@
 .php-openapi-covB:
-	grep -rhPo '^class \w+' src/spec/ | awk '{print $$2}' |grep -v '^Type$$' | sort > $@
+	grep -rhoE '^class [A-Za-z0-9_]+' src/spec/ | awk '{print $$2}' |grep -v '^Type$$' | sort > $@
 
 .PHONY: all check-style fix-style install test lint coverage
 
