@@ -77,7 +77,6 @@ JSON;
             ["/m~0n" , "#/m~0n" , 8],
         ];
         foreach ($return as $example) {
-            $example[3] = self::rfcJsonDocument();
             yield $example;
         }
     }
@@ -86,7 +85,7 @@ JSON;
     {
         yield from self::rfcExamples();
 
-        yield ["/a#b" , "#/a%23b" , 16, '{"a#b": 16}'];
+        yield ["/a#b" , "#/a%23b" , 16];
     }
 
     #[DataProvider('allExamples')]

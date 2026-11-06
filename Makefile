@@ -9,6 +9,7 @@ endif
 # Run make with IN_DOCKER=1 to run php commands in a docker container
 DOCKER_PHP=
 IN_DOCKER=0
+CS_ARGS=
 PHP_CS_FIXER_VERSION=v3.95.28
 PHP_CS_FIXER_SHA256=44dd8aa9b83163b4913bc39d3e26ba94221ffa03957d000e9aec252f656b0f60
 ifeq ($(IN_DOCKER),1)
@@ -30,7 +31,7 @@ all:
 
 
 check-style: php-cs-fixer.phar
-	PHP_CS_FIXER_IGNORE_ENV=1 ./php-cs-fixer.phar fix src/ --diff --dry-run
+	PHP_CS_FIXER_IGNORE_ENV=1 ./php-cs-fixer.phar fix src/ --diff --dry-run $(CS_ARGS)
 
 fix-style: php-cs-fixer.phar
 	$(DOCKER_PHP) vendor/bin/indent --tabs composer.json
