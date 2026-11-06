@@ -3,11 +3,10 @@
 use cebe\openapi\Reader;
 use cebe\openapi\spec\Server;
 use cebe\openapi\spec\ServerVariable;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @covers \cebe\openapi\spec\Server
- * @covers \cebe\openapi\spec\ServerVariable
- */
+#[CoversClass(\cebe\openapi\spec\Server::class)]
+#[CoversClass(\cebe\openapi\spec\ServerVariable::class)]
 class ServerTest extends \PHPUnit\Framework\TestCase
 {
     public function testRead()

@@ -7,11 +7,11 @@ use cebe\openapi\spec\Paths;
 use cebe\openapi\spec\Reference;
 use cebe\openapi\spec\Response;
 use cebe\openapi\spec\Responses;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @covers \cebe\openapi\spec\Paths
- * @covers \cebe\openapi\spec\PathItem
- */
+#[CoversClass(\cebe\openapi\spec\Paths::class)]
+#[CoversClass(\cebe\openapi\spec\PathItem::class)]
 class PathTest extends \PHPUnit\Framework\TestCase
 {
     public function testRead()
@@ -97,9 +97,7 @@ JSON
         // The last one can be supported in future, but now SpecBaseObjects::__construct() requires array explicitly
     }
 
-    /**
-     * @dataProvider badPathsConfigProvider
-     */
+    #[DataProvider('badPathsConfigProvider')]
     public function testPathsCanNotBeCreatedFromBullshit($config, $expectedException)
     {
         $this->expectException(\cebe\openapi\exceptions\TypeErrorException::class);

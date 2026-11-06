@@ -2,10 +2,9 @@
 
 use cebe\openapi\Reader;
 use cebe\openapi\spec\Link;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @covers \cebe\openapi\spec\Link
- */
+#[CoversClass(\cebe\openapi\spec\Link::class)]
 class LinkTest extends \PHPUnit\Framework\TestCase
 {
     public function testRead()

@@ -2,10 +2,9 @@
 
 use cebe\openapi\Reader;
 use cebe\openapi\spec\Parameter;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @covers \cebe\openapi\spec\Parameter
- */
+#[CoversClass(\cebe\openapi\spec\Parameter::class)]
 class ParameterTest extends \PHPUnit\Framework\TestCase
 {
     public function testRead()

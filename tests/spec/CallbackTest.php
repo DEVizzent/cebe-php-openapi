@@ -2,10 +2,9 @@
 
 use cebe\openapi\Reader;
 use cebe\openapi\spec\Callback;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @covers \cebe\openapi\spec\Callback
- */
+#[CoversClass(\cebe\openapi\spec\Callback::class)]
 class CallbackTest extends \PHPUnit\Framework\TestCase
 {
     public function testRead()

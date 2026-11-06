@@ -4,11 +4,11 @@ use cebe\openapi\Reader;
 use cebe\openapi\spec\MediaType;
 use cebe\openapi\spec\Response;
 use cebe\openapi\spec\Responses;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @covers \cebe\openapi\spec\Response
- * @covers \cebe\openapi\spec\Responses
- */
+#[CoversClass(\cebe\openapi\spec\Response::class)]
+#[CoversClass(\cebe\openapi\spec\Responses::class)]
 class ResponseTest extends \PHPUnit\Framework\TestCase
 {
     public function testRead()
@@ -183,9 +183,7 @@ YAML
         // The last one can be supported in future, but now SpecBaseObjects::__construct() requires array explicitly
     }
 
-    /**
-     * @dataProvider badResponseProvider
-     */
+    #[DataProvider('badResponseProvider')]
     public function testPathsCanNotBeCreatedFromBullshit($config, $expectedException)
     {
         $this->expectException(\cebe\openapi\exceptions\TypeErrorException::class);

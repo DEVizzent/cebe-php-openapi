@@ -99,11 +99,7 @@ YAML
 
         $inlineYamlExample = $openapi->paths['/']->get->responses['200']->content['application/json']->example;
 
-        if (method_exists($this, 'assertIsArray')) {
-            $this->assertIsArray($inlineYamlExample);
-        } else {
-            $this->assertInternalType('array', $inlineYamlExample);
-        }
+        $this->assertIsArray($inlineYamlExample);
 
         $expectedArray = json_decode(<<<JSON
 {

@@ -4,12 +4,11 @@ use cebe\openapi\Reader;
 use cebe\openapi\spec\Contact;
 use cebe\openapi\spec\Info;
 use cebe\openapi\spec\License;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @covers \cebe\openapi\spec\Info
- * @covers \cebe\openapi\spec\Contact
- * @covers \cebe\openapi\spec\License
- */
+#[CoversClass(\cebe\openapi\spec\Info::class)]
+#[CoversClass(\cebe\openapi\spec\Contact::class)]
+#[CoversClass(\cebe\openapi\spec\License::class)]
 class InfoTest extends \PHPUnit\Framework\TestCase
 {
     public function testRead()

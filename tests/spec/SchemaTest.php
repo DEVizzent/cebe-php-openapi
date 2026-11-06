@@ -6,11 +6,11 @@ use cebe\openapi\spec\Discriminator;
 use cebe\openapi\spec\Reference;
 use cebe\openapi\spec\Schema;
 use cebe\openapi\spec\Type;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @covers \cebe\openapi\spec\Schema
- * @covers \cebe\openapi\spec\Discriminator
- */
+#[CoversClass(\cebe\openapi\spec\Schema::class)]
+#[CoversClass(\cebe\openapi\spec\Discriminator::class)]
 class SchemaTest extends \PHPUnit\Framework\TestCase
 {
     public function testRead()
@@ -252,9 +252,7 @@ YAML
         // The last one can be supported in future, but now SpecBaseObjects::__construct() requires array explicitly
     }
 
-    /**
-     * @dataProvider badSchemaProvider
-     */
+    #[DataProvider('badSchemaProvider')]
     public function testPathsCanNotBeCreatedFromBullshit($config, $expectedException)
     {
         $this->expectException(\cebe\openapi\exceptions\TypeErrorException::class);

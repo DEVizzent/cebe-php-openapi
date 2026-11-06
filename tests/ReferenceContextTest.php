@@ -3,6 +3,7 @@
 
 use cebe\openapi\ReferenceContext;
 use cebe\openapi\spec\OpenApi;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class ReferenceContextTest extends \PHPUnit\Framework\TestCase
 {
@@ -115,9 +116,7 @@ class ReferenceContextTest extends \PHPUnit\Framework\TestCase
         return $data;
     }
 
-    /**
-     * @dataProvider resolveUriProvider
-     */
+    #[DataProvider('resolveUriProvider')]
     public function testResolveUri($baseUri, $referencedUri, $expected)
     {
         $context = new ReferenceContext(new OpenApi([]), $baseUri);
@@ -192,9 +191,7 @@ class ReferenceContextTest extends \PHPUnit\Framework\TestCase
         return $data;
     }
 
-    /**
-     * @dataProvider normalizeUriProvider
-     */
+    #[DataProvider('normalizeUriProvider')]
     public function testNormalizeUri($uri, $expected)
     {
         $context = new ReferenceContext(null, $uri);
@@ -216,9 +213,7 @@ class ReferenceContextTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    /**
-     * @dataProvider disallowedUriProvider
-     */
+    #[DataProvider('disallowedUriProvider')]
     public function testFetchReferencedFileRejectsDisallowedUri($baseUri, $uri)
     {
         $context = new ReferenceContext(null, $baseUri);

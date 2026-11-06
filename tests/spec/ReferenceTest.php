@@ -8,10 +8,9 @@ use cebe\openapi\spec\RequestBody;
 use cebe\openapi\spec\Response;
 use cebe\openapi\spec\Schema;
 use cebe\openapi\spec\Example;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @covers \cebe\openapi\spec\Reference
- */
+#[CoversClass(\cebe\openapi\spec\Reference::class)]
 class ReferenceTest extends \PHPUnit\Framework\TestCase
 {
     public function testResolveInDocument()

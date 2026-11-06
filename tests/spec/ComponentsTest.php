@@ -2,10 +2,9 @@
 
 use cebe\openapi\Reader;
 use cebe\openapi\spec\Components;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @covers \cebe\openapi\spec\Components
- */
+#[CoversClass(\cebe\openapi\spec\Components::class)]
 class ComponentsTest extends \PHPUnit\Framework\TestCase
 {
     public function testRead()
