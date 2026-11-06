@@ -6,13 +6,11 @@ ifeq ($(XDEBUG),1)
 XPHPARGS=-dzend_extension=xdebug.so -dxdebug.remote_enable=1 -dxdebug.remote_autostart=1
 endif
 
-# Run make with IN_DOCKER=1 to run yarn and php commands in a docker container
+# Run make with IN_DOCKER=1 to run php commands in a docker container
 DOCKER_PHP=
-DOCKER_NODE=
 IN_DOCKER=0
 ifeq ($(IN_DOCKER),1)
 DOCKER_PHP=docker compose run --rm php
-DOCKER_NODE=docker compose run --rm -w /app node
 endif
 
 all:
@@ -37,9 +35,8 @@ fix-style: php-cs-fixer.phar
 	$(DOCKER_PHP) vendor/bin/indent --spaces .php_cs.dist
 	$(DOCKER_PHP) ./php-cs-fixer.phar fix src/ --diff
 
-install: composer.lock yarn.lock
+install: composer.lock
 	$(DOCKER_PHP) composer install --prefer-dist --no-interaction --no-progress --ansi
-	$(DOCKER_NODE) yarn install
 
 test: unit test-recursion.json test-recursion2.yaml test-recursion3_index.yaml test-empty-maps.json test-const.json
 
@@ -62,8 +59,6 @@ lint: install
 	$(DOCKER_PHP) php $(PHPARGS) $(XPHPARGS) bin/php-openapi validate tests/spec/data/recursion2.yaml
 	$(DOCKER_PHP) php $(PHPARGS) $(XPHPARGS) bin/php-openapi validate tests/spec/data/empty-maps.json
 	$(DOCKER_PHP) php $(PHPARGS) $(XPHPARGS) bin/php-openapi validate tests/spec/data/const.json
-	$(DOCKER_NODE) yarn run speccy lint tests/spec/data/reference/playlist.json
-	$(DOCKER_NODE) yarn run speccy lint tests/spec/data/recursion.json
 
 stan:
 	$(DOCKER_PHP) php $(PHPARGS) vendor/bin/phpstan analyse -l 5 src
