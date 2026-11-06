@@ -19,7 +19,3 @@ services:
         extra_hosts:
             - "host.docker.internal:host-gateway"
         tty: true
-    node:
-        image: node:12
-        volumes:
-            - .:/app
