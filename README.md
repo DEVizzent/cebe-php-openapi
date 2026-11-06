@@ -24,7 +24,7 @@ Supported OpenAPI versions:
 
 ## Requirements
 
-- PHP 7.1 or higher (works fine with PHP 8)
+- PHP 8.2 or higher
 
 ## Used by
 
@@ -267,7 +267,7 @@ $errors = $openapi->getErrors();
 
 You may use the docker environment for local development:
 
-    docker-compose build
+    docker compose build
     make IN_DOCKER=1 install
     make IN_DOCKER=1 test
     ...

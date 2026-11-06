@@ -163,9 +163,9 @@ class ReferenceContext
      */
     private function dirname($path)
     {
-        $pos = mb_strrpos(str_replace('\\', '/', $path), '/');
+        $pos = strrpos(str_replace('\\', '/', $path), '/');
         if ($pos !== false) {
-            return mb_substr($path, 0, $pos);
+            return substr($path, 0, $pos);
         }
         return '';
     }
