@@ -2,8 +2,8 @@
 /composer.lock
 /composer.phar
 
-/.php_cs.cache
-/.phpunit.result.cache
+/.php-cs-fixer.cache
+/.phpunit.cache
 /.idea
 xdebug_remote.log
 php-cs-fixer.phar
