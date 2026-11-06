@@ -71,6 +71,8 @@ JSON
         $openapi = $this->createOpenAPI();
 
         $yaml = \cebe\openapi\Writer::writeToYaml($openapi);
+        // symfony/yaml before 8.1 dumps empty maps as "{  }"
+        $yaml = str_replace('{  }', '{}', $yaml);
 
 
         $this->assertEquals(preg_replace('~\R~', "\n", <<<YAML
@@ -78,7 +80,7 @@ openapi: 3.0.0
 info:
   title: 'Test API'
   version: 1.0.0
-paths: {  }
+paths: {}
 
 YAML
         ),
@@ -118,6 +120,8 @@ JSON
         ]);
 
         $yaml = \cebe\openapi\Writer::writeToYaml($openapi);
+        // symfony/yaml before 8.1 dumps empty maps as "{  }"
+        $yaml = str_replace('{  }', '{}', $yaml);
 
 
         $this->assertEquals(preg_replace('~\R~', "\n", <<<YAML
@@ -125,7 +129,7 @@ openapi: 3.0.0
 info:
   title: 'Test API'
   version: 1.0.0
-paths: {  }
+paths: {}
 security: []
 
 YAML
@@ -170,6 +174,8 @@ JSON
         ]);
 
         $yaml = \cebe\openapi\Writer::writeToYaml($openapi);
+        // symfony/yaml before 8.1 dumps empty maps as "{  }"
+        $yaml = str_replace('{  }', '{}', $yaml);
 
 
         $this->assertEquals(preg_replace('~\R~', "\n", <<<YAML
@@ -177,7 +183,7 @@ openapi: 3.0.0
 info:
   title: 'Test API'
   version: 1.0.0
-paths: {  }
+paths: {}
 security:
   -
     Bearer: []
