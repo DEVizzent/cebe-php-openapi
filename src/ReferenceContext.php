@@ -28,6 +28,10 @@ class ReferenceContext
      * resolve all references, except recursive ones.
      */
     const RESOLVE_MODE_ALL = 'all';
+    /**
+     * URI schemes referenced files may be loaded from when [[allowedSchemes]] is not set.
+     */
+    const DEFAULT_ALLOWED_SCHEMES = ['file', 'http', 'https'];
 
     /**
      * @var bool whether to throw UnresolvableReferenceException in case a reference can not
@@ -38,6 +42,23 @@ class ReferenceContext
      * @var string
      */
     public $mode = self::RESOLVE_MODE_ALL;
+    /**
+     * @var string[]|null URI schemes referenced files may be loaded from.
+     * If `null` (the default), [[DEFAULT_ALLOWED_SCHEMES]] and the scheme of the base document are
+     * allowed, except that a document loaded via http(s) may not reference `file` URIs.
+     * If an array is given, exactly the listed schemes are allowed, e.g. `['file']` to disable remote references.
+     */
+    public $allowedSchemes = null;
+    /**
+     * @var callable|null optional callback receiving the URI of a referenced file. It must return `true`
+     * to allow loading the file, e.g. to restrict references to certain hosts or directories.
+     * It is called after the [[allowedSchemes]] check. HTTP redirects are followed without calling it again.
+     */
+    public $uriFilter = null;
+    /**
+     * @var float read timeout in seconds for referenced files loaded via http(s).
+     */
+    public $httpTimeout = 30.0;
     /**
      * @var SpecObjectInterface
      */
@@ -205,16 +226,22 @@ class ReferenceContext
      *
      * The current context will cache files by URI, so they are only loaded once.
      *
-     * @throws IOException in case the file is not readable or fetching the file
-     * from a remote URL failed.
+     * @throws IOException in case loading the URI is not allowed, the file is not readable
+     * or fetching the file from a remote URL failed.
      */
     public function fetchReferencedFile($uri)
     {
+        if (!$this->isUriAllowed($uri)) {
+            $e = new IOException("Loading referenced file is not allowed: '$uri'");
+            $e->fileName = $uri;
+            throw $e;
+        }
+
         if ($this->_cache->has('FILE_CONTENT://' . $uri, 'FILE_CONTENT')) {
             return $this->_cache->get('FILE_CONTENT://' . $uri, 'FILE_CONTENT');
         }
 
-        $content = file_get_contents($uri);
+        $content = file_get_contents($uri, false, stream_context_create(['http' => ['timeout' => $this->httpTimeout]]));
         if ($content === false) {
             $e = new IOException("Failed to read file: '$uri'");
             $e->fileName = $uri;
@@ -228,6 +255,41 @@ class ReferenceContext
         }
         $this->_cache->set('FILE_CONTENT://' . $uri, 'FILE_CONTENT', $parsedContent);
         return $parsedContent;
+    }
+
+    /**
+     * Check whether a referenced file may be loaded from the given URI.
+     */
+    private function isUriAllowed(string $uri): bool
+    {
+        $scheme = $this->getUriScheme($uri);
+        if ($this->allowedSchemes !== null) {
+            $allowed = array_map('strtolower', $this->allowedSchemes);
+        } else {
+            $baseScheme = $this->getUriScheme($this->_uri);
+            $allowed = self::DEFAULT_ALLOWED_SCHEMES;
+            if ($baseScheme === 'http' || $baseScheme === 'https') {
+                // a remote document must not be able to read local files
+                $allowed = array_diff($allowed, ['file']);
+            }
+            $allowed[] = $baseScheme;
+        }
+        if (!in_array($scheme, $allowed, true)) {
+            return false;
+        }
+        return $this->uriFilter === null || call_user_func($this->uriFilter, $uri) === true;
+    }
+
+    /**
+     * @return string the lowercase scheme of the URI. Paths without a scheme, including
+     * Windows paths with a drive letter, are local files and result in `file`.
+     */
+    private function getUriScheme(string $uri): string
+    {
+        if (preg_match('/^([a-z][a-z0-9+.\-]+):/i', $uri, $matches)) {
+            return strtolower($matches[1]);
+        }
+        return 'file';
     }
 
     /**
