@@ -3,12 +3,14 @@ XDEBUG=0
 PHPARGS=-dmemory_limit=512M
 XPHPARGS=
 ifeq ($(XDEBUG),1)
-XPHPARGS=-dzend_extension=xdebug.so -dxdebug.remote_enable=1 -dxdebug.remote_autostart=1
+XPHPARGS=-dzend_extension=xdebug.so -dxdebug.mode=debug -dxdebug.start_with_request=yes
 endif
 
 # Run make with IN_DOCKER=1 to run php commands in a docker container
 DOCKER_PHP=
 IN_DOCKER=0
+PHP_CS_FIXER_VERSION=v3.95.28
+PHP_CS_FIXER_SHA256=44dd8aa9b83163b4913bc39d3e26ba94221ffa03957d000e9aec252f656b0f60
 ifeq ($(IN_DOCKER),1)
 DOCKER_PHP=docker compose run --rm php
 endif
@@ -32,7 +34,7 @@ check-style: php-cs-fixer.phar
 
 fix-style: php-cs-fixer.phar
 	$(DOCKER_PHP) vendor/bin/indent --tabs composer.json
-	$(DOCKER_PHP) vendor/bin/indent --spaces .php_cs.dist
+	$(DOCKER_PHP) vendor/bin/indent --spaces .php-cs-fixer.dist.php
 	$(DOCKER_PHP) ./php-cs-fixer.phar fix src/ --diff
 
 install: composer.lock
@@ -41,12 +43,12 @@ install: composer.lock
 test: unit test-recursion.json test-recursion2.yaml test-recursion3_index.yaml test-empty-maps.json test-const.json
 
 unit:
-	$(DOCKER_PHP) php $(PHPARGS) $(XPHPARGS) vendor/bin/phpunit --verbose --colors=always $(TESTCASE)
+	$(DOCKER_PHP) php $(PHPARGS) $(XPHPARGS) vendor/bin/phpunit --colors=always $(TESTCASE)
 
 test-debug: unit-debug test-recursion.json test-recursion2.yaml test-recursion3_index.yaml test-empty-maps.json test-const.json
 
 unit-debug:
-	$(DOCKER_PHP) php $(PHPARGS) $(XPHPARGS) vendor/bin/phpunit --debug --testdox --colors=always -c phpunit11.xml.dist $(TESTCASE)
+	$(DOCKER_PHP) php $(PHPARGS) $(XPHPARGS) vendor/bin/phpunit --debug --testdox --colors=always $(TESTCASE)
 
 # test specific JSON files in tests/spec/data/
 # e.g. test-recursion will run validation on tests/spec/data/recursion.json
@@ -64,14 +66,17 @@ stan:
 	$(DOCKER_PHP) php $(PHPARGS) vendor/bin/phpstan analyse -l 5 src
 
 php-cs-fixer.phar:
-	wget -q https://github.com/FriendsOfPHP/PHP-CS-Fixer/releases/download/v2.16.7/php-cs-fixer.phar && chmod +x php-cs-fixer.phar
+	wget -q https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/releases/download/$(PHP_CS_FIXER_VERSION)/php-cs-fixer.phar -O $@.tmp
+	echo "$(PHP_CS_FIXER_SHA256)  $@.tmp" | sha256sum -c -
+	mv $@.tmp $@
+	chmod +x $@
 
-# find spec classes that are not mentioned in tests with @covers yet
+# find spec classes that are not mentioned in tests with #[CoversClass] yet
 coverage: .php-openapi-covA .php-openapi-covB
 	diff $^
 .INTERMEDIATE: .php-openapi-covA .php-openapi-covB
 .php-openapi-covA:
-	grep -rhPo '@covers .+' tests |cut -c 28- |sort > $@
+	grep -rhoE 'CoversClass\([^)]+::class' tests | sed -E 's/.*[\]([A-Za-z]+)::class/\1/' | sort > $@
 .php-openapi-covB:
 	grep -rhPo '^class \w+' src/spec/ | awk '{print $$2}' |grep -v '^Type$$' | sort > $@
 
