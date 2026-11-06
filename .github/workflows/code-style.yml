@@ -16,6 +16,11 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: "8.2"
+          tools: cs2pr
+
+      - name: Install PHP-CS-Fixer
+        run: make php-cs-fixer.phar
 
       - name: Check code style
-        run: make check-style
+        shell: bash
+        run: make -s check-style CS_ARGS=--format=checkstyle | cs2pr

@@ -1,0 +1,4 @@
+parameters:
+    # Spec data comes from YAML and JSON at runtime, so PHPDoc types are not guaranteed
+    # and the runtime checks based on them must stay.
+    treatPhpDocTypesAsCertain: false

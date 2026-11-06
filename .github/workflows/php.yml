@@ -23,10 +23,11 @@ jobs:
           - "highest"
         symfony-yaml: ['^6.4', '^7.4', '^8.0']
         include:
+          # composer.bat on Windows drops the caret of a version constraint
           - os: "windows-latest"
             php: "8.5"
             dependencies: "highest"
-            symfony-yaml: '^7.4'
+            symfony-yaml: '7.4.*'
           - os: "macos-latest"
             php: "8.5"
             dependencies: "highest"
