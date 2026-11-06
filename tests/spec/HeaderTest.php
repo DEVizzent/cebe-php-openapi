@@ -2,10 +2,9 @@
 
 use cebe\openapi\Reader;
 use cebe\openapi\spec\Header;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @covers \cebe\openapi\spec\Header
- */
+#[CoversClass(\cebe\openapi\spec\Header::class)]
 class HeaderTest extends \PHPUnit\Framework\TestCase
 {
     public function testRead()

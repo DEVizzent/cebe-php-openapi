@@ -1,33 +1,21 @@
-FROM php:7.4-cli
+FROM php:8.2-cli
 
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN echo "force-unsafe-io" > /etc/dpkg/dpkg.cfg.d/02apt-speedup && \
     echo "Acquire::http {No-Cache=True;};" > /etc/apt/apt.conf.d/no-cache
 RUN apt-get update && \
-    apt-get -y install \
-        gnupg2 && \
-    apt-key update && \
-    apt-get update && \
     apt-get install -y --no-install-recommends \
             libzip-dev \
-            libonig-dev \
             vim \
             git \
-            unzip\
-            libxml2-dev \
-            curl \
-            libcurl4-openssl-dev \
-            libssl-dev \
-        --no-install-recommends && \
-        apt-get clean && \
-        rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
-        && pecl install xdebug-3.1.5 \
-        && docker-php-ext-enable xdebug \
-        && docker-php-ext-install \
-                zip \
-                curl \
-                mbstring
+            unzip \
+            curl && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
+    pecl install xdebug && \
+    docker-php-ext-enable xdebug && \
+    docker-php-ext-install zip
 
 # Install composer
 ENV COMPOSER_ALLOW_SUPERUSER=1 \

@@ -4,11 +4,10 @@ use cebe\openapi\Reader;
 use cebe\openapi\spec\MediaType;
 use cebe\openapi\spec\RequestBody;
 use cebe\openapi\spec\Encoding;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @covers \cebe\openapi\spec\RequestBody
- * @covers \cebe\openapi\spec\Encoding
- */
+#[CoversClass(\cebe\openapi\spec\RequestBody::class)]
+#[CoversClass(\cebe\openapi\spec\Encoding::class)]
 class RequestBodyTest extends \PHPUnit\Framework\TestCase
 {
     public function testRead()

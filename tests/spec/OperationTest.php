@@ -3,11 +3,10 @@
 use cebe\openapi\Reader;
 use cebe\openapi\spec\Operation;
 use cebe\openapi\spec\ExternalDocumentation;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @covers \cebe\openapi\spec\Operation
- * @covers \cebe\openapi\spec\ExternalDocumentation
- */
+#[CoversClass(\cebe\openapi\spec\Operation::class)]
+#[CoversClass(\cebe\openapi\spec\ExternalDocumentation::class)]
 class OperationTest extends \PHPUnit\Framework\TestCase
 {
     public function testRead()

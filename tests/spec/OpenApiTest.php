@@ -3,10 +3,10 @@
 use cebe\openapi\spec\OpenApi;
 use cebe\openapi\Reader;
 use Symfony\Component\Yaml\Yaml;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @covers \cebe\openapi\spec\OpenApi
- */
+#[CoversClass(\cebe\openapi\spec\OpenApi::class)]
 class OpenApiTest extends \PHPUnit\Framework\TestCase
 {
     public function testEmpty()
@@ -53,11 +53,7 @@ class OpenApiTest extends \PHPUnit\Framework\TestCase
 
 
         // servers
-        if (method_exists($this, 'assertIsArray')) {
-            $this->assertIsArray($openapi->servers);
-        } else {
-            $this->assertInternalType('array', $openapi->servers);
-        }
+        $this->assertIsArray($openapi->servers);
 
         $this->assertCount(1, $openapi->servers);
         foreach ($openapi->servers as $server) {
@@ -192,9 +188,7 @@ class OpenApiTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    /**
-     * @dataProvider specProvider
-     */
+    #[DataProvider('specProvider')]
     public function testSpecs($openApiFile)
     {
         if (strtolower(substr($openApiFile, -5, 5)) === '.json') {

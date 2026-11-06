@@ -2,6 +2,7 @@
 
 use cebe\openapi\json\JsonPointer;
 use cebe\openapi\json\JsonReference;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 class JsonPointerTest extends \PHPUnit\Framework\TestCase
 {
@@ -22,17 +23,13 @@ class JsonPointerTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    /**
-     * @dataProvider encodeDecodeData
-     */
+    #[DataProvider('encodeDecodeData')]
     public function testEncode($encoded, $decoded)
     {
         $this->assertEquals($encoded, JsonPointer::encode($decoded));
     }
 
-    /**
-     * @dataProvider encodeDecodeData
-     */
+    #[DataProvider('encodeDecodeData')]
     public function testDecode($encoded, $decoded)
     {
         $this->assertEquals($decoded, JsonPointer::decode($encoded));
@@ -92,9 +89,7 @@ JSON;
         yield ["/a#b" , "#/a%23b" , 16, '{"a#b": 16}'];
     }
 
-    /**
-     * @dataProvider allExamples
-     */
+    #[DataProvider('allExamples')]
     public function testUriEncoding($jsonPointer, $uriJsonPointer, $expectedEvaluation)
     {
         $pointer = new JsonPointer($jsonPointer);
@@ -112,9 +107,7 @@ JSON;
         $this->assertSame("somefile.json$uriJsonPointer", $reference->getReference());
     }
 
-    /**
-     * @dataProvider rfcExamples
-     */
+    #[DataProvider('rfcExamples')]
     public function testEvaluation($jsonPointer, $uriJsonPointer, $expectedEvaluation)
     {
         $document = json_decode(self::rfcJsonDocument());

@@ -3,10 +3,9 @@
 use cebe\openapi\Reader;
 use cebe\openapi\spec\ExternalDocumentation;
 use cebe\openapi\spec\Tag;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @covers \cebe\openapi\spec\Tag
- */
+#[CoversClass(\cebe\openapi\spec\Tag::class)]
 class TagTest extends \PHPUnit\Framework\TestCase
 {
     public function testRead()

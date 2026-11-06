@@ -6,11 +6,11 @@ use cebe\openapi\spec\Example;
 use cebe\openapi\spec\OpenApi;
 use cebe\openapi\spec\Reference;
 use Symfony\Component\Yaml\Yaml;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 
-/**
- * @covers \cebe\openapi\spec\MediaType
- * @covers \cebe\openapi\spec\Example
- */
+#[CoversClass(\cebe\openapi\spec\MediaType::class)]
+#[CoversClass(\cebe\openapi\spec\Example::class)]
 class MediaTypeTest extends \PHPUnit\Framework\TestCase
 {
     public function testRead()
@@ -47,11 +47,7 @@ YAML
 
         $this->assertInstanceOf(Reference::class, $mediaType->schema);
 
-        if (method_exists($this, 'assertIsArray')) {
-            $this->assertIsArray($mediaType->examples);
-        } else {
-            $this->assertInternalType('array', $mediaType->examples);
-        }
+        $this->assertIsArray($mediaType->examples);
 
         $this->assertCount(3, $mediaType->examples);
         $this->assertArrayHasKey('cat', $mediaType->examples);
@@ -112,9 +108,7 @@ YAML
         // The last one can be supported in future, but now SpecBaseObjects::__construct() requires array explicitly
     }
 
-    /**
-     * @dataProvider badEncodingProvider
-     */
+    #[DataProvider('badEncodingProvider')]
     public function testPathsCanNotBeCreatedFromBullshit($config, $expectedException)
     {
         $this->expectException(\cebe\openapi\exceptions\TypeErrorException::class);

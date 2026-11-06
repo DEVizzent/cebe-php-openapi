@@ -5,13 +5,12 @@ use cebe\openapi\spec\OAuthFlow;
 use cebe\openapi\spec\OAuthFlows;
 use cebe\openapi\spec\SecurityRequirement;
 use cebe\openapi\spec\SecurityScheme;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @covers \cebe\openapi\spec\SecurityScheme
- * @covers \cebe\openapi\spec\OAuthFlows
- * @covers \cebe\openapi\spec\OAuthFlow
- * @covers \cebe\openapi\spec\SecurityRequirement
- */
+#[CoversClass(\cebe\openapi\spec\SecurityScheme::class)]
+#[CoversClass(\cebe\openapi\spec\OAuthFlows::class)]
+#[CoversClass(\cebe\openapi\spec\OAuthFlow::class)]
+#[CoversClass(\cebe\openapi\spec\SecurityRequirement::class)]
 class SecuritySchemeTest extends \PHPUnit\Framework\TestCase
 {
     public function testRead()

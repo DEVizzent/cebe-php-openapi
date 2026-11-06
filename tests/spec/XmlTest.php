@@ -2,10 +2,9 @@
 
 use cebe\openapi\Reader;
 use cebe\openapi\spec\Xml;
+use PHPUnit\Framework\Attributes\CoversClass;
 
-/**
- * @covers \cebe\openapi\spec\Xml
- */
+#[CoversClass(\cebe\openapi\spec\Xml::class)]
 class XmlTest extends \PHPUnit\Framework\TestCase
 {
     public function testRead()
