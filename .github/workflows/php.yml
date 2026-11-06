@@ -6,6 +6,11 @@ on:
   pull_request:
     branches: [ master ]
 
+env:
+  # Composer refuses to install versions with security advisories, which includes the old
+  # symfony/yaml versions still allowed by composer.json. Remove when support for them is dropped.
+  COMPOSER_NO_BLOCKING: "1"
+
 jobs:
   phpunit:
     name: Tests
