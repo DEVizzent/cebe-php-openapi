@@ -201,4 +201,133 @@ class ReferenceContextTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expected, $context->getUri());
     }
 
+    private const DATA_URI = 'data://text/plain;base64,ZGVzY3JpcHRpb246IGZyb20td3JhcHBlcgo=';
+
+    public static function disallowedUriProvider()
+    {
+        return [
+            ['file:///var/www/openapi.yaml', self::DATA_URI],
+            ['file:///var/www/openapi.yaml', 'php://filter/resource=/etc/passwd'],
+            ['file:///var/www/openapi.yaml', 'PHP://filter/resource=/etc/passwd'],
+            ['file:///var/www/openapi.yaml', 'phar:///var/www/archive.phar/definitions.yaml'],
+            ['file:///var/www/openapi.yaml', 'ftp://example.invalid/definitions.yaml'],
+            ['https://example.invalid/openapi.yaml', 'file:///etc/passwd'],
+            ['http://example.invalid/openapi.yaml', 'file:///etc/passwd'],
+        ];
+    }
+
+    /**
+     * @dataProvider disallowedUriProvider
+     */
+    public function testFetchReferencedFileRejectsDisallowedUri($baseUri, $uri)
+    {
+        $context = new ReferenceContext(null, $baseUri);
+
+        $this->expectException(\cebe\openapi\exceptions\IOException::class);
+        $this->expectExceptionMessage('not allowed');
+        $context->fetchReferencedFile($uri);
+    }
+
+    public function testFetchReferencedFileAllowsLocalFilesFromLocalDocument()
+    {
+        $file = $this->createTemporaryFile("description: from-file\n");
+        try {
+            $context = new ReferenceContext(null, $file);
+            $this->assertSame(['description' => 'from-file'], $context->fetchReferencedFile($context->getUri()));
+        } finally {
+            unlink($file);
+        }
+    }
+
+    public function testFetchReferencedFileAllowsSchemeOfBaseDocument()
+    {
+        $context = new ReferenceContext(null, 'data://text/plain;base64,e30=');
+
+        $this->assertSame(['description' => 'from-wrapper'], $context->fetchReferencedFile(self::DATA_URI));
+    }
+
+    public function testAllowedSchemesCanBeExtended()
+    {
+        $context = new ReferenceContext(null, 'file:///var/www/openapi.yaml');
+        $context->allowedSchemes = ['DATA'];
+
+        $this->assertSame(['description' => 'from-wrapper'], $context->fetchReferencedFile(self::DATA_URI));
+    }
+
+    public function testAllowedSchemesCanBeRestricted()
+    {
+        $file = $this->createTemporaryFile("description: from-file\n");
+        try {
+            $context = new ReferenceContext(null, $file);
+            $context->allowedSchemes = ['https'];
+
+            $this->expectException(\cebe\openapi\exceptions\IOException::class);
+            $this->expectExceptionMessage('not allowed');
+            $context->fetchReferencedFile($context->getUri());
+        } finally {
+            unlink($file);
+        }
+    }
+
+    public function testUriFilterCanRejectUri()
+    {
+        $file = $this->createTemporaryFile("description: from-file\n");
+        try {
+            $context = new ReferenceContext(null, $file);
+            $seen = [];
+            $context->uriFilter = function ($uri) use (&$seen) {
+                $seen[] = $uri;
+                return false;
+            };
+
+            try {
+                $context->fetchReferencedFile($context->getUri());
+                $this->fail('Expected the URI to be rejected.');
+            } catch (\cebe\openapi\exceptions\IOException $e) {
+                $this->assertNotFalse(strpos($e->getMessage(), 'not allowed'));
+            }
+            $this->assertSame([$context->getUri()], $seen);
+        } finally {
+            unlink($file);
+        }
+    }
+
+    public function testDisallowedReferenceIsNotResolved()
+    {
+        $openapi = $this->createSpecWithReference(self::DATA_URI);
+
+        $this->expectException(\cebe\openapi\exceptions\UnresolvableReferenceException::class);
+        $this->expectExceptionMessage('not allowed');
+        $openapi->resolveReferences(new ReferenceContext($openapi, 'file:///var/www/openapi.yaml'));
+    }
+
+    public function testDisallowedReferenceIsReportedWithoutException()
+    {
+        $openapi = $this->createSpecWithReference(self::DATA_URI);
+        $context = new ReferenceContext($openapi, 'file:///var/www/openapi.yaml');
+        $context->throwException = false;
+
+        $openapi->resolveReferences($context);
+
+        $reference = $openapi->components->schemas['Pet'];
+        $this->assertInstanceOf(\cebe\openapi\spec\Reference::class, $reference);
+        $this->assertNotFalse(strpos(implode("\n", $reference->getErrors()), 'not allowed'));
+    }
+
+    private function createSpecWithReference(string $uri): OpenApi
+    {
+        return new OpenApi([
+            'openapi' => '3.0.3',
+            'info' => ['title' => 'Test', 'version' => '1.0.0'],
+            'paths' => [],
+            'components' => ['schemas' => ['Pet' => ['$ref' => $uri]]],
+        ]);
+    }
+
+    private function createTemporaryFile(string $content): string
+    {
+        $file = tempnam(sys_get_temp_dir(), 'openapi');
+        file_put_contents($file, $content);
+        return $file;
+    }
 }

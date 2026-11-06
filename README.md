@@ -223,6 +223,29 @@ $openapi->resolveReferences(
 );
 ```
 
+### Restricting where References are loaded from
+
+Resolving a reference reads the file or URL it points to. By default references may only be loaded from `file`, `http`
+and `https` URIs and from the scheme of the base document. A document loaded via `http` or `https` may not reference `file` URIs.
+
+If you process API Descriptions from untrusted sources, restrict this further or do not resolve references at all:
+
+```php
+$context = new \cebe\openapi\ReferenceContext($openapi, '/var/www/api/openapi.yaml');
+// only allow exactly these schemes, e.g. disable remote references
+$context->allowedSchemes = ['file'];
+// decide for each URI, e.g. restrict references to one directory
+$context->uriFilter = function (string $uri): bool {
+    return strpos($uri, 'file:///var/www/api/') === 0;
+};
+// read timeout in seconds for http(s) references
+$context->httpTimeout = 5.0;
+$openapi->resolveReferences($context);
+```
+
+`uriFilter` is not called again for HTTP redirects. To limit remote hosts reliably, also restrict outgoing connections
+on the network level, or disable remote references.
+
 ### Validation
 
 The library provides simple validation operations, that check basic OpenAPI spec requirements.
