@@ -25,7 +25,7 @@ use cebe\openapi\SpecBaseObject;
  * @property string $style
  * @property boolean $explode
  * @property boolean $allowReserved
- * @property Schema|Reference|null $schema
+ * @property Schema|Reference|bool|null $schema
  * @property mixed $example
  * @property Example[] $examples
  *
@@ -114,7 +114,7 @@ class Parameter extends SpecBaseObject
                 $this->addError("Parameter 'required' must be true for 'in': 'path'.");
             }
         }
-        if (!empty($this->content) && !empty($this->schema)) {
+        if (!empty($this->content) && $this->schema !== null) {
             $this->addError('A Parameter Object MUST contain either a schema property, or a content property, but not both.');
         }
         if (!empty($this->content) && count($this->content) !== 1) {

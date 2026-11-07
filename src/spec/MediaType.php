@@ -15,7 +15,7 @@ use cebe\openapi\SpecBaseObject;
  *
  * @link https://github.com/OAI/OpenAPI-Specification/blob/3.0.2/versions/3.0.2.md#mediaTypeObject
  *
- * @property Schema|Reference|null $schema
+ * @property Schema|Reference|bool|null $schema
  * @property mixed $example
  * @property Example[]|Reference[] $examples
  * @property Encoding[] $encoding
@@ -54,11 +54,11 @@ class MediaType extends SpecBaseObject
                     $encoding[$property] = $encodingData;
                 } elseif (is_array($encodingData)) {
                     $schema = $this->schema->properties[$property] ?? null;
-                    // Don't pass the schema if it's still an unresolved reference.
-                    if ($schema instanceof Reference) {
-                        $encoding[$property] = new Encoding($encodingData);
-                    } else {
+                    // Don't pass the schema if it's still an unresolved reference or a boolean schema.
+                    if ($schema instanceof Schema) {
                         $encoding[$property] = new Encoding($encodingData, $schema);
+                    } else {
+                        $encoding[$property] = new Encoding($encodingData);
                     }
                 } else {
                     $givenType = gettype($encodingData);

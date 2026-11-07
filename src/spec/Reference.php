@@ -340,6 +340,11 @@ class Reference implements SpecObjectInterface, DocumentContextInterface
      */
     private function adjustRelativeReferences($referencedDocument, $basePath, $baseDocument = null, $oContext = null)
     {
+        // nothing to adjust in scalar values, for example a boolean schema
+        if (!is_array($referencedDocument)) {
+            return $referencedDocument;
+        }
+
         $context = new ReferenceContext(null, $basePath);
         if ($baseDocument === null) {
             $baseDocument = $referencedDocument;

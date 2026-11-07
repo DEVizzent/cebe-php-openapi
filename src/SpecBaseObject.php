@@ -12,6 +12,7 @@ use cebe\openapi\exceptions\UnknownPropertyException;
 use cebe\openapi\json\JsonPointer;
 use cebe\openapi\json\JsonReference;
 use cebe\openapi\spec\Reference;
+use cebe\openapi\spec\Schema;
 use cebe\openapi\spec\Type;
 
 /**
@@ -150,6 +151,11 @@ abstract class SpecBaseObject implements SpecObjectInterface, DocumentContextInt
     protected function instantiate($type, $data)
     {
         if ($data instanceof $type || $data instanceof Reference) {
+            return $data;
+        }
+
+        // OpenAPI 3.1: a Schema Object can also be a boolean, which is kept as it is.
+        if ($type === Schema::class && is_bool($data)) {
             return $data;
         }
 

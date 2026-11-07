@@ -42,12 +42,14 @@ use cebe\openapi\SpecBaseObject;
  * @property mixed $const
  *
  * @property string|string[] $type type can only be `string` in OpenAPI 3.0, but can be an array of strings since OpenAPI 3.1
- * @property Schema[]|Reference[] $allOf
- * @property Schema[]|Reference[] $oneOf
- * @property Schema[]|Reference[] $anyOf
- * @property Schema|Reference|null $not
- * @property Schema|Reference|null $items
- * @property Schema[]|Reference[] $properties
+ * Since OpenAPI 3.1 a Schema Object can also be a boolean, so every property below that holds Schema Objects can contain `true` or `false` too.
+ *
+ * @property (Schema|Reference|bool)[] $allOf
+ * @property (Schema|Reference|bool)[] $oneOf
+ * @property (Schema|Reference|bool)[] $anyOf
+ * @property Schema|Reference|bool|null $not
+ * @property Schema|Reference|bool|null $items
+ * @property (Schema|Reference|bool)[] $properties
  * @property Schema|Reference|bool $additionalProperties
  * @property string $description
  * @property string $format

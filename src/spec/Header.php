@@ -29,7 +29,7 @@ class Header extends Parameter
         if (!empty($this->in)) {
             $this->addError("'in' must not be specified in Header Object.");
         }
-        if (!empty($this->content) && !empty($this->schema)) {
+        if (!empty($this->content) && $this->schema !== null) {
             $this->addError("A Header Object MUST contain either a schema property, or a content property, but not both. ");
         }
     }

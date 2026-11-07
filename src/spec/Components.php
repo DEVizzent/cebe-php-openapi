@@ -17,7 +17,7 @@ use cebe\openapi\SpecBaseObject;
  *
  * @link https://github.com/OAI/OpenAPI-Specification/blob/3.0.2/versions/3.0.2.md#componentsObject
  *
- * @property Schema[]|Reference[] $schemas
+ * @property (Schema|Reference|bool)[] $schemas
  * @property Response[]|Reference[] $responses
  * @property Parameter[]|Reference[] $parameters
  * @property Example[]|Reference[] $examples
@@ -26,6 +26,7 @@ use cebe\openapi\SpecBaseObject;
  * @property SecurityScheme[]|Reference[] $securitySchemes
  * @property Link[]|Reference[] $links
  * @property Callback[]|Reference[] $callbacks
+ * @property PathItem[]|Reference[] $pathItems
  *
  *
  */
@@ -46,6 +47,7 @@ class Components extends SpecBaseObject
             'securitySchemes' => [Type::STRING, SecurityScheme::class],
             'links' => [Type::STRING, Link::class],
             'callbacks' => [Type::STRING, Callback::class],
+            'pathItems' => [Type::STRING, PathItem::class],
         ];
     }
 
