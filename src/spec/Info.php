@@ -17,6 +17,7 @@ use cebe\openapi\SpecBaseObject;
  * @link https://github.com/OAI/OpenAPI-Specification/blob/3.0.2/versions/3.0.2.md#infoObject
  *
  * @property string $title
+ * @property string $summary
  * @property string $description
  * @property string $termsOfService
  * @property Contact|null $contact
@@ -33,6 +34,7 @@ class Info extends SpecBaseObject
     {
         return [
             'title' => Type::STRING,
+            'summary' => Type::STRING,
             'description' => Type::STRING,
             'termsOfService' => Type::STRING,
             'contact' => Contact::class,

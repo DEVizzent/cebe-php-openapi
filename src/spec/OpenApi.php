@@ -17,10 +17,11 @@ use cebe\openapi\SpecBaseObject;
  *
  * @property string $openapi
  * @property Info $info
+ * @property string|null $jsonSchemaDialect
  * @property Server[] $servers
  * @property Paths|PathItem[] $paths
  * @property Components|null $components
- * @property PathItem[]|null $webhooks
+ * @property (PathItem|Reference)[] $webhooks
  * @property SecurityRequirement[] $security
  * @property Tag[] $tags
  * @property ExternalDocumentation|null $externalDocs
@@ -45,9 +46,10 @@ class OpenApi extends SpecBaseObject
         return [
             'openapi' => Type::STRING,
             'info' => Info::class,
+            'jsonSchemaDialect' => Type::STRING,
             'servers' => [Server::class],
             'paths' => Paths::class,
-            'webhooks' => [PathItem::class],
+            'webhooks' => [Type::STRING, PathItem::class],
             'components' => Components::class,
             'security' => [SecurityRequirement::class],
             'tags' => [Tag::class],

@@ -29,7 +29,8 @@ class SecurityScheme extends SpecBaseObject
         "apiKey",
         "http",
         "oauth2",
-        "openIdConnect"
+        "openIdConnect",
+        "mutualTLS"
     ];
 
     /**

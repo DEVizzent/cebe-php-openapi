@@ -41,12 +41,12 @@ fix-style: php-cs-fixer.phar
 install: composer.lock
 	$(DOCKER_PHP) composer install --prefer-dist --no-interaction --no-progress --ansi
 
-test: unit test-recursion.json test-recursion2.yaml test-recursion3_index.yaml test-empty-maps.json test-const.json
+test: unit test-recursion.json test-recursion2.yaml test-recursion3_index.yaml test-empty-maps.json test-const.json test-openapi-3.1.yaml
 
 unit:
 	$(DOCKER_PHP) php $(PHPARGS) $(XPHPARGS) vendor/bin/phpunit --colors=always $(TESTCASE)
 
-test-debug: unit-debug test-recursion.json test-recursion2.yaml test-recursion3_index.yaml test-empty-maps.json test-const.json
+test-debug: unit-debug test-recursion.json test-recursion2.yaml test-recursion3_index.yaml test-empty-maps.json test-const.json test-openapi-3.1.yaml
 
 unit-debug:
 	$(DOCKER_PHP) php $(PHPARGS) $(XPHPARGS) vendor/bin/phpunit --debug --testdox --colors=always $(TESTCASE)

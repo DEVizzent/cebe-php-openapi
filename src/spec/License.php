@@ -15,6 +15,7 @@ use cebe\openapi\SpecBaseObject;
  * @link https://github.com/OAI/OpenAPI-Specification/blob/3.0.2/versions/3.0.2.md#licenseObject
  *
  * @property string $name
+ * @property string $identifier
  * @property string $url
  *
  */
@@ -27,6 +28,7 @@ class License extends SpecBaseObject
     {
         return [
             'name' => Type::STRING,
+            'identifier' => Type::STRING,
             'url' => Type::STRING,
         ];
     }
@@ -38,5 +40,8 @@ class License extends SpecBaseObject
     {
         $this->requireProperties(['name']);
         $this->validateUrl('url');
+        if (!empty($this->identifier) && !empty($this->url)) {
+            $this->addError('A License Object MUST NOT contain both an identifier and a url.');
+        }
     }
 }

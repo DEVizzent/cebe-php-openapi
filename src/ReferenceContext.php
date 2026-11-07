@@ -11,6 +11,7 @@ use cebe\openapi\exceptions\IOException;
 use cebe\openapi\exceptions\UnresolvableReferenceException;
 use cebe\openapi\json\JsonPointer;
 use cebe\openapi\spec\Reference;
+use cebe\openapi\spec\Schema;
 use Symfony\Component\Yaml\Yaml;
 
 /**
@@ -315,6 +316,11 @@ class ReferenceContext
 
         if ($referencedData === null) {
             return null;
+        }
+
+        // OpenAPI 3.1: a Schema Object can also be a boolean
+        if ($toType === Schema::class && is_bool($referencedData)) {
+            return $referencedData;
         }
 
         // transitive reference

@@ -243,7 +243,6 @@ YAML
     {
         yield [['properties' => ['a' => 'foo']], 'Unable to instantiate cebe\openapi\spec\Schema Object with data \'foo\''];
         yield [['properties' => ['a' => 42]], 'Unable to instantiate cebe\openapi\spec\Schema Object with data \'42\''];
-        yield [['properties' => ['a' => false]], 'Unable to instantiate cebe\openapi\spec\Schema Object with data \'\''];
         yield [['properties' => ['a' => new stdClass()]], "Unable to instantiate cebe\openapi\spec\Schema Object with data 'stdClass Object\n(\n)\n'"];
 
         yield [['additionalProperties' => 'foo'], 'Schema::$additionalProperties MUST be either boolean or a Schema/Reference object, "string" given'];

@@ -1,0 +1,44 @@
+openapi: 3.1.0
+jsonSchemaDialect: https://json-schema.org/draft/2020-12/schema
+info:
+  title: OpenAPI 3.1 features
+  summary: Fields and boolean schemas added in OpenAPI 3.1
+  version: 1.0.0
+  license:
+    name: Apache 2.0
+    identifier: Apache-2.0
+webhooks:
+  newPet:
+    post:
+      responses:
+        '200':
+          description: OK
+components:
+  pathItems:
+    Shared:
+      get:
+        responses:
+          '200':
+            description: OK
+  securitySchemes:
+    tls:
+      type: mutualTLS
+  schemas:
+    Anything: true
+    Nothing: false
+    EmptyList:
+      type: array
+      items: false
+    Combined:
+      type: object
+      properties:
+        anything: true
+        nothing: false
+        external:
+          $ref: 'openapi-3.1-definitions.yaml#/Anything'
+        externalAlias:
+          $ref: 'openapi-3.1-definitions.yaml#/Alias'
+      allOf:
+        - true
+      not: false
+      additionalProperties: false
