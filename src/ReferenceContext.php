@@ -303,7 +303,7 @@ class ReferenceContext
      * @param JsonPointer $pointer
      * @param array $data
      * @param string|null $toType
-     * @return SpecObjectInterface|array|null
+     * @return SpecObjectInterface|array|bool|null a boolean for an OpenAPI 3.1 boolean schema
      */
     public function resolveReferenceData($uri, JsonPointer $pointer, $data, $toType)
     {
